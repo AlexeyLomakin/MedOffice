@@ -1,15 +1,49 @@
+# === Android/Gradle build ===
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
 local.properties
+
+# === IDE-specific ===
+.idea/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/vcs.xml
+.idea/**/navEditor.xml
+.idea/**/assetWizardSettings.xml
+.idea/**/dataSources.xml
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dictionaries
+.idea/**/libraries/
+.idea/modules.xml
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+
+# === Kotlin/Java ===
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# === Test output ===
+test-output/
+
+# === Lint/Inspection cache ===
+lint/reports/
+lint/tmp/
+*.lint
+
+# === Misc ===
+*.orig
+*.rej
+*.bak
+
+# === Mac M1 (rosetta/IDE tools cache) ===
+.idea/.idea.mac.cache/
