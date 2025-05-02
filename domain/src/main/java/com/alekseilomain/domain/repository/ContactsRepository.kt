@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ContactsRepository {
 
-    suspend fun fetchAndCache(seed: String)
+    suspend fun fetchPage(seed: String, page: Int)
 
     fun observeAll(): Flow<List<Contact>>
 

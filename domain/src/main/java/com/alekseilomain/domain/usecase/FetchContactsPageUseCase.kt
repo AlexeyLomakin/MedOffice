@@ -1,6 +1,6 @@
 package com.alekseilomain.domain.usecase
 
-interface FetchContactsUseCase {
+interface FetchContactsPageUseCase {
     /** Загружает из сети и кеширует в БД список контактов по seed */
-    suspend operator fun invoke(seed: String)
+    suspend operator fun invoke(seed: String, page: Int)
 }
