@@ -22,4 +22,7 @@ interface ContactDao {
 
     @Query("DELETE FROM contacts")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM contacts ORDER BY isManual DESC, id DESC")
+    fun getAllFlow(): Flow<List<ContactEntity>>
 }

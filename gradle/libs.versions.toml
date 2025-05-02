@@ -1,8 +1,13 @@
 [versions]
+datastore-preferences = "1.1.0"
 kotlin = "2.1.20"
 compose = "2025.04.01"
+kotlinx-coroutines-test = "1.8.1"
+mockito-core = "5.2.0"
+mockito-kotlin = "5.0.0"
+play-services-location = "21.3.0"
 room = "2.7.1"
-hilt = "2.54"
+hilt = "2.56.2"
 navigation = "2.8.9"
 lifecycle = "2.8.7"
 coroutines = "1.8.1"
@@ -11,7 +16,7 @@ core-ktx = "1.16.0"
 retrofit = "2.9.0"
 okhttp = "4.10.0"
 moshi = "1.15.0"
-datastore = "1.1.5"
+datastore = "1.1.0"
 ksp = "2.1.20-1.0.32"
 material = "1.12.0"
 activity-compose = "1.10.1"
@@ -19,6 +24,9 @@ junit = "4.13.2"
 junit-android = "1.2.1"
 espresso-core = "3.6.1"
 appcompat = "1.7.0"
+rules = "1.6.1"
+runner = "1.6.2"
+test-core = "1.6.1"
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.9.2" }
@@ -50,12 +58,16 @@ activity-compose    = { module = "androidx.activity:activity-compose", version.r
 # Lifecycle & Navigation
 lifecycle-runtime-ktx       = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+
 navigation-compose          = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 # Hilt & DI
 hilt-android        = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler       = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
+
+# Location
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
 
 # Room
 room-runtime        = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -70,8 +82,8 @@ moshi               = { module = "com.squareup.moshi:moshi", version.ref = "mosh
 moshi-kotlin        = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 
 # DataStore
-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
-
+datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-preferences" }
 # Coroutines
 coroutines-core     = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android  = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -79,7 +91,13 @@ coroutines-android  = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-andro
 # Testing
 junit               = { module = "junit:junit", version.ref = "junit" }
 androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "junit-android" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "test-core" }
 espresso-core       = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 compose-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 ui-test-manifest    = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }

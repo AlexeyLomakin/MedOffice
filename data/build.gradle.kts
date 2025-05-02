@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -32,12 +33,19 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = false
+}
+
 dependencies {
     // Project
     implementation(project(":domain"))
 
     // Core
     implementation(libs.core.ktx)
+
+    // Location
+    implementation(libs.play.services.location)
 
     // Networking
     implementation(libs.retrofit)
@@ -52,17 +60,25 @@ dependencies {
     ksp(libs.room.compiler)
 
     // DataStore
+    implementation(libs.datastore)
     implementation(libs.datastore.preferences)
 
     // Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
 
-    // Hilt
+    // DI
     implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.espresso.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.test.core)
 }

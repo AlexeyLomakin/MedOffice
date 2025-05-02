@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.alekseilomain.domain.usecase.LoginUseCase
 import javax.inject.Inject
 
-private val SEED_KEY = stringPreferencesKey("seed")
+private val SEED_KEY: Preferences.Key<String> = stringPreferencesKey("seed")
 
 class LoginUseCaseImpl @Inject constructor(
     private val prefs: DataStore<Preferences>

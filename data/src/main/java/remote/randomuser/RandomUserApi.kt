@@ -1,5 +1,6 @@
 package remote.randomuser
 
+import remote.randomuser.model.RandomUserResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

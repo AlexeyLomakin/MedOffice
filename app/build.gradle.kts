@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,6 +12,9 @@ android {
     namespace = "com.alekseilomain.medoffice"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.alekseilomain.medoffice"
         minSdk = 24
@@ -18,6 +23,21 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Читаем токен DaData из local.properties
+        val propsFile = rootProject.file("local.properties")
+        val props = Properties().apply {
+            if (propsFile.exists()) {
+                load(propsFile.inputStream())
+            } else {
+                throw GradleException("local.properties not found in project root")
+            }
+        }
+        val daDataToken = props.getProperty("dadata.api.token")
+            ?: throw GradleException("DaData API token not defined in local.properties")
+
+        // Генерируем поле BuildConfig.DADATA_API_TOKEN
+        buildConfigField("String", "DADATA_API_TOKEN", "\"$daDataToken\"")
     }
 
     buildTypes {
@@ -43,34 +63,18 @@ android {
     }
 }
 
-dependencies {
+hilt {
+    enableAggregatingTask = false
+}
 
+dependencies {
     // Project
+    implementation(project(":presentation"))
     implementation(project(":data"))
     implementation(project(":domain"))
-    implementation(project(":presentation"))
 
-    // Core
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.material)
-
-    // Compose
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.material3)
-    implementation(libs.activity.compose)
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.preview)
-
-    // Lifecycle & Navigation
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.navigation.compose)
-
-    // Hilt & DI
+    // DI
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
     // Networking
@@ -86,16 +90,20 @@ dependencies {
     ksp(libs.room.compiler)
 
     // DataStore
+    implementation(libs.datastore)
     implementation(libs.datastore.preferences)
 
-    // Coroutines
-    implementation(libs.coroutines.core)
-    implementation(libs.coroutines.android)
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.activity.compose)
 
-    // Testing
+    // Material
+    implementation(libs.material)
+
+    // Тестирование
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.compose.test.junit4)
-    androidTestImplementation(libs.ui.test.manifest)
 }

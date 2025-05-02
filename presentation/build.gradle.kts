@@ -28,6 +28,10 @@ android {
     }
 }
 
+hilt {
+    enableAggregatingTask = false
+}
+
 dependencies {
     // Project
     implementation(project(":domain"))
@@ -44,6 +48,9 @@ dependencies {
     implementation(libs.compose.ui.preview)
     implementation(libs.compose.material3)
     implementation(libs.activity.compose)
+
+    // Material
+    implementation(libs.material)
 
     // Hilt
     implementation(libs.hilt.android)
