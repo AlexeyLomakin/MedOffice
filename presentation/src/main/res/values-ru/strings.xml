@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in">Войти</string>
+    <string name="seed">Укажите Сид</string>
+    <string name="last_name">Фамилия</string>
+    <string name="email">Email</string>
+    <string name="add_contact">Добавить контакт</string>
+    <string name="are_you_sure">Вы уверены, что хотите выйти?</string>
+    <string name="information_will_be_deleted">
+        При выходе информация о сохраненных контактах будет удалена
+    </string>
+    <string name="information_will_not_be_saved">
+        При выходе введенная инфомрация не сохранится
+    </string>
+    <string name="cancel">Отмена</string>
+    <string name="exit">Выйти</string>
+    <string name="new_contact">Новый контакт</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+</resources>

@@ -3,45 +3,60 @@ package com.alekseilomain.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.alekseilomain.presentation.ui.theme.MedOfficeTheme
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.core.DataStore
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.core.os.LocaleListCompat
+import com.alekseilomain.presentation.navigation.MedOfficeNavGraph
+import com.alekseilomain.presentation.navigation.Screen
+import com.alekseilomain.domain.usecase.IsLoggedInUseCase
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val languageViewModel: LanguageViewModel by viewModels()
+
+    private val isLoggedInUseCase: IsLoggedInUseCase by lazy {
+        EntryPointAccessors.fromApplication(
+            applicationContext,
+            MainEntryPoint::class.java
+        ).isLoggedInUseCase()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MedOfficeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+        lifecycleScope.launch {
+            val langTag = languageViewModel.langFlow.first()
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(langTag)
+            )
+            val loggedIn = isLoggedInUseCase().first()
+            setContent {
+                MedOfficeNavGraph(
+                    startDestination = if (loggedIn) Screen.Contacts.route else Screen.Login.route
+                )
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MedOfficeTheme {
-        Greeting("Android")
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface MainEntryPoint {
+        fun isLoggedInUseCase(): IsLoggedInUseCase
     }
 }
