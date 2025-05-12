@@ -18,29 +18,34 @@ fun NavGraphBuilder.contactsGraph(
     composable(Screen.Contacts.route) {
         val vm: ContactsViewModel = hiltViewModel()
 
-        val contacts by vm.contacts.collectAsState()
-        val city by vm.city.collectAsState(initial = "")
+        // city и язык
+        val city       by vm.city.collectAsState(initial = "")
         val currentLang by languageViewModel.langFlow.collectAsState(initial = "ru")
 
         key(currentLang) {
             ContactsScreen(
-                contacts = contacts,
-                city = city,
-                currentLang = currentLang,
-                onLogout = {
+                // <- передаём поток PagingData<Contact>
+                pagingFlow      = vm.pagingFlow,
+                city            = city,
+                currentLang     = currentLang,
+                onLogout        = {
                     vm.logoutAndClear()
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Contacts.route) { inclusive = true }
                     }
                 },
-                onAddContact = {
-                    navController.navigate(Screen.ContactForm.createRoute(FormMode.ADD))
+                onAddContact    = {
+                    navController.navigate(
+                        Screen.ContactForm.createRoute(FormMode.ADD)
+                    )
                 },
-                onEditContact = { id ->
-                    navController.navigate(Screen.ContactForm.createRoute(FormMode.EDIT, id))
+                onEditContact   = { id ->
+                    navController.navigate(
+                        Screen.ContactForm.createRoute(FormMode.EDIT, id)
+                    )
                 },
                 onToggleLanguage = languageViewModel::toggleLanguage,
-                onLoadNextPage = vm::loadNextPage
+                onLoadNextPage   = vm::loadNextPage
             )
         }
     }

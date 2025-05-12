@@ -3,39 +3,13 @@ package com.alekseilomain.presentation.contacts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,16 +19,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.alekseilomain.domain.model.Contact
 import com.alekseilomain.presentation.LanguageToggle
 import com.alekseilomain.presentation.R
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContactsScreen(
-    contacts: List<Contact>,
+    pagingFlow: Flow<PagingData<Contact>>,
     city: String,
     currentLang: String,
     onLogout: () -> Unit,
@@ -63,28 +43,31 @@ fun ContactsScreen(
     onToggleLanguage: () -> Unit,
     onLoadNextPage: () -> Unit
 ) {
+    val lazyItems = pagingFlow.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
-            .filter { it != null && it >= contacts.lastIndex }
-            .collect { onLoadNextPage() }
+            .filter { index ->
+                index != null
+                        && index >= lazyItems.itemCount - 1
+                        && lazyItems.loadState.append !is LoadState.Loading
+            }
+            .collectLatest { onLoadNextPage() }
     }
 
     var showLogoutDialog by remember { mutableStateOf(false) }
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
-            title = { Text(stringResource(R.string.are_you_sure)) },
-            text = { Text(stringResource(R.string.information_will_be_deleted)) },
+            title =   { Text(stringResource(R.string.are_you_sure)) },
+            text =    { Text(stringResource(R.string.information_will_be_deleted)) },
             confirmButton = {
                 TextButton(onClick = {
                     showLogoutDialog = false
                     onLogout()
-                }) {
-                    Text(stringResource(R.string.exit))
-                }
+                }) { Text(stringResource(R.string.exit)) }
             },
             dismissButton = {
                 TextButton(onClick = { showLogoutDialog = false }) {
@@ -118,28 +101,55 @@ fun ContactsScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
             HeaderRow()
 
             Box(modifier = Modifier.weight(1f)) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    state = listState
-                ) {
-                    itemsIndexed(contacts, key = { _, contact -> contact.id }) { index, contact ->
-                        ContactRow(
-                            rowIndex = index + 1,
-                            contact = contact,
-                            index = index,
-                            onEdit = { if (contact.isManual) onEditContact(contact.id) }
-                        )
+                    LazyColumn(state = listState) {
+                        items(
+                            count = lazyItems.itemCount,
+                            key = lazyItems.itemKey(),
+                            contentType = lazyItems.itemContentType()
+                        ) { index ->
+                            val contact = lazyItems[index]
+                            if (contact != null) {
+                                ContactRow(
+                                    rowIndex = index + 1,
+                                    contact = contact,
+                                    index = index,
+                                    onEdit = { if (contact.isManual) onEditContact(contact.id) }
+                                )
+                            }
+                        }
+                    when (lazyItems.loadState.append) {
+                        is LoadState.Loading -> item {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        is LoadState.Error -> item {
+                            val e = lazyItems.loadState.append as LoadState.Error
+                            TextButton(
+                                onClick = { lazyItems.retry() },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Ошибка: ${e.error.localizedMessage}. Повторить")
+                            }
+                        }
+
+                        else -> {}
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
@@ -277,4 +287,3 @@ private fun ContactRow(
         }
     }
 }
-
