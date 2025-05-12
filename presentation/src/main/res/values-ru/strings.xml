@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sign_in">Войти</string>
-    <string name="seed">Укажите Сид</string>
+    <string name="seed">Сид</string>
+    <string name="seed_enter">Укажите Сид</string>
     <string name="last_name">Фамилия</string>
     <string name="email">Email</string>
     <string name="add_contact">Добавить контакт</string>

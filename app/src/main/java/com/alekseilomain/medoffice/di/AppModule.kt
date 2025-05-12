@@ -1,12 +1,23 @@
 package com.alekseilomain.medoffice.di
 
-import androidx.datastore.dataStoreFile
+import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import com.alekseilomain.data.database.model.ContactEntity
 import com.alekseilomain.domain.model.Contact
 import com.alekseilomain.domain.repository.ContactsRepository
-import com.alekseilomain.domain.usecase.*
+import com.alekseilomain.domain.usecase.ClearContactsUseCase
+import com.alekseilomain.domain.usecase.FetchContactsPageUseCase
+import com.alekseilomain.domain.usecase.GetCityUseCase
+import com.alekseilomain.domain.usecase.GetLocationUseCase
+import com.alekseilomain.domain.usecase.GetSeedUseCase
+import com.alekseilomain.domain.usecase.IsLoggedInUseCase
+import com.alekseilomain.domain.usecase.LoginUseCase
+import com.alekseilomain.domain.usecase.LogoutUseCase
+import com.alekseilomain.domain.usecase.ObserveContactsUseCase
+import com.alekseilomain.domain.usecase.UpsertContactUseCase
+import com.alekseilomain.medoffice.BuildConfig.DADATA_API_TOKEN
 import com.squareup.moshi.Moshi
 import dagger.Binds
 import dagger.Module
@@ -14,18 +25,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Named
-import javax.inject.Singleton
-import android.content.Context
-import com.alekseilomain.data.database.model.ContactEntity
-import com.alekseilomain.medoffice.BuildConfig.DADATA_API_TOKEN
 import mapper.ContactDtoToEntityMapper
 import mapper.DomainToEntityMapper
 import mapper.EntityToDomainMapper
 import mapper.Mapper
+import mapper.UserDtoToEntityMapper
+import okhttp3.OkHttpClient
 import remote.location.DaDataApi
 import remote.location.FusedLocationClientImpl
 import remote.location.GetCityUseCaseImpl
@@ -34,20 +39,32 @@ import remote.location.LocationClient
 import remote.randomuser.ContactDto
 import remote.randomuser.ContactsRepositoryImpl
 import remote.randomuser.RandomUserApi
+import remote.randomuser.model.UserDto
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import usecase.ClearContactsUseCaseImpl
 import usecase.FetchContactsPageUseCaseImpl
+import usecase.GetSeedUseCaseImpl
 import usecase.IsLoggedInUseCaseImpl
 import usecase.LoginUseCaseImpl
 import usecase.LogoutUseCaseImpl
 import usecase.ObserveContactsUseCaseImpl
 import usecase.UpsertContactUseCaseImpl
+import java.io.File
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
 
     // region Binds
+
+    @Binds
+    abstract fun bindGetSeed(
+        impl: GetSeedUseCaseImpl
+    ): GetSeedUseCase
 
     @Binds
     abstract fun bindLocationClient(
@@ -58,6 +75,12 @@ abstract class AppModule {
     abstract fun bindContactsRepository(
         impl: ContactsRepositoryImpl
     ): ContactsRepository
+
+    @Binds
+    abstract fun bindUserDtoToEntityMapper(
+        impl: UserDtoToEntityMapper
+    ): Mapper<UserDto, ContactEntity>
+
 
     @Binds
     abstract fun bindContactDtoToEntityMapper(
@@ -122,6 +145,7 @@ abstract class AppModule {
     // endregion
 
     companion object {
+
         // region Network
 
         @Provides @Singleton
@@ -186,7 +210,9 @@ abstract class AppModule {
             @ApplicationContext context: Context
         ): DataStore<Preferences> =
             PreferenceDataStoreFactory.create(
-                produceFile = { context.dataStoreFile("settings") }
+                produceFile = {
+                    File(context.filesDir, "datastore/settings.preferences_pb")
+                }
             )
 
         // endregion

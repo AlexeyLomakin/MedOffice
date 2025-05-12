@@ -92,6 +92,7 @@ dependencies {
     // DataStore
     implementation(libs.datastore)
     implementation(libs.datastore.preferences)
+    implementation(libs.datastore.preferences.core)
 
     // Compose
     implementation(platform(libs.compose.bom))
@@ -106,4 +107,7 @@ dependencies {
     // Тестирование
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
+
+
+    implementation(libs.logging.interceptor)
 }

@@ -45,6 +45,7 @@ dependencies {
     // DataStore
     implementation(libs.datastore)
     implementation(libs.datastore.preferences)
+    implementation(libs.datastore.preferences.core)
 
     // Navigation Compose
     implementation(libs.navigation.compose)
@@ -55,6 +56,10 @@ dependencies {
     implementation(libs.compose.ui.preview)
     implementation(libs.compose.material3)
     implementation(libs.activity.compose)
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 
     // Material
     implementation(libs.material)
