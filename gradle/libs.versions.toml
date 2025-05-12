@@ -3,8 +3,10 @@ datastore-preferences = "1.1.0"
 kotlin = "2.1.20"
 compose = "2025.04.01"
 kotlinx-coroutines-test = "1.8.1"
+logging-interceptor = "4.11.0"
 mockito-core = "5.2.0"
 mockito-kotlin = "5.0.0"
+moshi-kotlin-codegen = "1.14.0"
 play-services-location = "21.3.0"
 room = "2.7.1"
 hilt = "2.56.2"
@@ -27,6 +29,7 @@ appcompat = "1.7.0"
 rules = "1.6.1"
 runner = "1.6.2"
 test-core = "1.6.1"
+paging = "3.3.6"
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.9.2" }
@@ -41,6 +44,10 @@ compose-compiler    = { id = "org.jetbrains.kotlin.plugin.compose", version.ref 
 # Kotlin
 kotlin-stdlib       = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 javax-inject        = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
+
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "logging-interceptor" }
+paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 # AndroidX Core
 core-ktx            = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
@@ -58,7 +65,6 @@ activity-compose    = { module = "androidx.activity:activity-compose", version.r
 # Lifecycle & Navigation
 lifecycle-runtime-ktx       = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-
 navigation-compose          = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 # Hilt & DI
@@ -80,10 +86,14 @@ retrofit-moshi      = { module = "com.squareup.retrofit2:converter-moshi", versi
 okhttp              = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 moshi               = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin        = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi-kotlin-codegen" }
 
 # DataStore
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
-datastore-preferences = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-preferences" }
+datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastore-preferences" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences" }
+
+
 # Coroutines
 coroutines-core     = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android  = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }

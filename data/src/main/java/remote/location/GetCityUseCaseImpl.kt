@@ -13,6 +13,7 @@ class GetCityUseCaseImpl @Inject constructor(
             token   = "Token $token",
             request = GeolocateRequest(lat, lon)
         )
-        return response.suggestions.firstOrNull()?.data?.city
+        val city = response.suggestions.firstOrNull()?.data?.city
+        return city
     }
 }

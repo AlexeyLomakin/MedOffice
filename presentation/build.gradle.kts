@@ -42,6 +42,14 @@ dependencies {
     // Lifecycle
     implementation(libs.lifecycle.runtime.ktx)
 
+    // DataStore
+    implementation(libs.datastore)
+    implementation(libs.datastore.preferences)
+    implementation(libs.datastore.preferences.core)
+
+    // Navigation Compose
+    implementation(libs.navigation.compose)
+
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
@@ -49,11 +57,16 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.activity.compose)
 
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     // Material
     implementation(libs.material)
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
     // Testing

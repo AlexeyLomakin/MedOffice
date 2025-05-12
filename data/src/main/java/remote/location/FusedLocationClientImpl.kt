@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.alekseilomain.domain.model.Coordinates
 import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class FusedLocationClientImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : LocationClient {
 
     private val client by lazy {
@@ -24,7 +25,11 @@ class FusedLocationClientImpl @Inject constructor(
                 .addOnSuccessListener { loc ->
                     cont.resume(loc?.let { Coordinates(it.latitude, it.longitude) })
                 }
-                .addOnFailureListener { cont.resumeWithException(it) }
-                .addOnCanceledListener { cont.cancel() }
+                .addOnFailureListener { e ->
+                    cont.resumeWithException(e)
+                }
+                .addOnCanceledListener {
+                    cont.cancel()
+                }
         }
 }

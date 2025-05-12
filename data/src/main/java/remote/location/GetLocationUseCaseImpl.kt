@@ -7,6 +7,7 @@ import javax.inject.Inject
 class GetLocationUseCaseImpl @Inject constructor(
     private val locationClient: LocationClient
 ) : GetLocationUseCase {
-    override suspend operator fun invoke(): Coordinates? =
-        locationClient.getLastLocation()
+    override suspend operator fun invoke(): Coordinates? {
+        return locationClient.getLastLocation()
+    }
 }
