@@ -1,12 +1,13 @@
 package com.alekseilomain.presentation.contacts
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,8 +43,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.os.LocaleListCompat
 import com.alekseilomain.domain.model.Contact
 import com.alekseilomain.presentation.LanguageToggle
 import com.alekseilomain.presentation.R
@@ -62,14 +63,8 @@ fun ContactsScreen(
     onToggleLanguage: () -> Unit,
     onLoadNextPage: () -> Unit
 ) {
-
-    LaunchedEffect(currentLang) {
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(currentLang)
-        )
-    }
-
     val listState = rememberLazyListState()
+
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
@@ -122,31 +117,34 @@ fun ContactsScreen(
             )
         }
     ) { innerPadding ->
-        Box(
-            Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 152.dp),
-                state = listState
-            ) {
-                item { HeaderRow() }
-                itemsIndexed(contacts) { index, contact ->
-                    ContactRow(
-                        rowIndex = index + 1,
-                        contact = contact,
-                        onEdit = { if (contact.isManual) onEditContact(contact.id) }
-                    )
+            HeaderRow()
+
+            Box(modifier = Modifier.weight(1f)) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState
+                ) {
+                    itemsIndexed(contacts, key = { _, contact -> contact.id }) { index, contact ->
+                        ContactRow(
+                            rowIndex = index + 1,
+                            contact = contact,
+                            index = index,
+                            onEdit = { if (contact.isManual) onEditContact(contact.id) }
+                        )
+                    }
                 }
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = onAddContact,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .height(56.dp),
@@ -209,17 +207,25 @@ private fun HeaderRow() {
 }
 
 @Composable
-private fun ContactRow(rowIndex: Int, contact: Contact, onEdit: () -> Unit) {
+private fun ContactRow(
+    rowIndex: Int,
+    contact: Contact,
+    index: Int,
+    onEdit: () -> Unit
+) {
+    val backgroundColor = if (index % 2 == 1) Color(0xFFEDEDED) else Color.White
+
     Row(
         Modifier
             .fillMaxWidth()
             .height(40.dp)
+            .background(backgroundColor)
     ) {
         Box(
             Modifier
                 .weight(1f)
                 .fillMaxHeight()
-                .border(1.dp, Color(0xFFE0E0E0)),
+                .border(Dp.Hairline, Color(0xFFE0E0E0)),
             contentAlignment = Alignment.Center
         ) {
             Text(rowIndex.toString(), style = MaterialTheme.typography.bodySmall)
@@ -228,7 +234,7 @@ private fun ContactRow(rowIndex: Int, contact: Contact, onEdit: () -> Unit) {
             Modifier
                 .weight(2.5f)
                 .fillMaxHeight()
-                .border(1.dp, Color(0xFFE0E0E0))
+                .border(Dp.Hairline, Color(0xFFE0E0E0))
                 .padding(horizontal = 4.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -243,7 +249,7 @@ private fun ContactRow(rowIndex: Int, contact: Contact, onEdit: () -> Unit) {
             Modifier
                 .weight(4.5f)
                 .fillMaxHeight()
-                .border(1.dp, Color(0xFFE0E0E0))
+                .border(Dp.Hairline, Color(0xFFE0E0E0))
                 .padding(horizontal = 4.dp),
             contentAlignment = Alignment.CenterStart
         ) {
@@ -271,3 +277,4 @@ private fun ContactRow(rowIndex: Int, contact: Contact, onEdit: () -> Unit) {
         }
     }
 }
+
