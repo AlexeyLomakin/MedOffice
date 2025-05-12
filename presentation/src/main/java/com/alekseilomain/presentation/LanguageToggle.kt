@@ -35,8 +35,8 @@ fun LanguageToggle(
         Row(
             modifier = Modifier
                 .wrapContentWidth()
-                .padding(2.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                .padding(1.dp),
+            horizontalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             listOf("ru", "en").forEachIndexed { idx, lang ->
                 val selected = lang == currentLang
@@ -47,7 +47,7 @@ fun LanguageToggle(
                             shape = RectangleShape
                         )
                         .clickable { onLanguageSelected(lang) }
-                        .padding(vertical = 4.dp, horizontal = 8.dp),
+                        .padding(vertical = 2.dp, horizontal = 6.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

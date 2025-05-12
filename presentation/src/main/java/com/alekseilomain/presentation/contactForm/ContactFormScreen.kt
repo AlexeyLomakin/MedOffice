@@ -27,6 +27,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,8 +78,16 @@ fun ContactFormScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor         = Color.White,
+                    scrolledContainerColor = Color.White,
+                    navigationIconContentColor = colorScheme.onBackground,
+                    titleContentColor          = colorScheme.onBackground,
+                    actionIconContentColor     = colorScheme.onBackground
+                ),
                 title = {
                     Text(
                         if (mode == FormMode.ADD)
@@ -96,9 +105,11 @@ fun ContactFormScreen(
         }
     ) { padding ->
         Box(
+
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .background(Color.White)
         ) {
             Column(
                 Modifier
@@ -176,9 +187,10 @@ fun ContactFormScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp)
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .background(Color.White)
+                    .height(38.dp),
+                shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(0.dp)
             ) {

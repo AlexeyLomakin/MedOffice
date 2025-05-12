@@ -58,7 +58,7 @@ fun LoginScreen(
                 onLanguageSelected = onToggleLanguage,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(start = 16.dp, top = 16.dp)
+                    .padding(start = 10.dp, top = 16.dp)
             )
             Column(
                 modifier = Modifier

@@ -78,10 +78,18 @@ fun ContactsScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor         = Color.White,
+                    scrolledContainerColor = Color.White,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor          = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor     = MaterialTheme.colorScheme.onBackground
+                ),
                 navigationIcon = {
-                    Box(Modifier.padding(start = 16.dp)) {
+                    Box(Modifier.padding(start = 12.dp).height(24.dp)) {
                         LanguageToggle(currentLang, onLanguageSelected = { onToggleLanguage() })
                     }
                 },
@@ -93,7 +101,7 @@ fun ContactsScreen(
                         Icon(
                             painter = painterResource(R.drawable.logout),
                             contentDescription = stringResource(R.string.exit),
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp).offset(x = 10.dp)
                         )
                     }
                 }
@@ -157,7 +165,8 @@ fun ContactsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .height(56.dp),
+                    .background(Color.White)
+                    .height(44.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(0.dp)
@@ -279,8 +288,9 @@ private fun ContactRow(
                         painterResource(R.drawable.edit),
                         contentDescription = stringResource(R.string.edit),
                         modifier = Modifier
-                            .size(16.dp)
+                            .size(24.dp)
                             .clickable { onEdit() }
+                            .padding( end = 8.dp)
                     )
                 }
             }
